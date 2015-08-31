@@ -11,10 +11,6 @@ helpers do
   end
 end
 
-get '/test' do
-  erb :"test/test"
-end
-
 get '/' do
   erb :set_name
 end
