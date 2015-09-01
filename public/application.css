@@ -1,0 +1,12 @@
+form#hit_form {
+  float: left;
+}
+
+form#stay_form {
+  margin-left: 10px;
+  float: left;
+}
+
+img.card_image {
+  margin-left: 0px 5px 5px 0px;
+}
