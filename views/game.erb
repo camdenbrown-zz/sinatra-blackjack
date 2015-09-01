@@ -1,5 +1,13 @@
 <h4> Hi, <%= session[:player_name]%>!</h4>
 
+<% if @play_again %>
+  <p>
+    <strong>Play Again?</strong>
+    <a href="/game" class="btn btn-primary">Yes</a>
+    <a href="/gameover" class="btn btn-primary">No</a>
+  </p>
+<%end%>
+
 <div class="well">
   <h4>Your cards are:</h4>
     <% session[:player_cards].each do |card| %>
@@ -10,10 +18,22 @@
 
 <div class="well">
   <h4>Dealer's cards are:</h4>
-    <% session[:dealer_cards].each do |card| %>
-    <%= card_image(card) %>
+    <% session[:dealer_cards].each_with_index do |card, i| %>
+      <% if session[:turn] != "dealer" && i == 0%>
+        <img src="/images/cards/cover.jpg">
+      <%else%>
+        <%= card_image(card) %>
+      <%end%>
     <%end%>
   <br/>
+  <%if @show_dealer_hit %>
+    <p>
+      <h5> Dealer has: <%= calculate_total(session[:dealer_cards])%></h5>
+      <form action="/game/dealer/hit" method="post">
+        <button type="submit" class="btn btn-primary"> Show Dealer Cards</button>
+      </form>
+    </p>
+  <%end%>
 </div>
 
 Your total is: <%=calculate_total(session[:player_cards])%>
@@ -21,7 +41,7 @@ Your total is: <%=calculate_total(session[:player_cards])%>
 
 What would you like to do?
 <br/>
-<%if @show_blackjack_buttons == true%>
+<%if @show_blackjack_buttons%>
 <form id="hit_form" action="/hit" method="post">
   <button class="btn btn-success" type="submit">Hit</button>
 </form>
