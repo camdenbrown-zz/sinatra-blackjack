@@ -3,6 +3,7 @@ require 'sinatra'
 
 BLACKJACK_AMOUNT = 21
 DEALER_MIN = 17
+POT_AMOUNT = 500
 
 use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
@@ -56,19 +57,21 @@ helpers do
   def winner!(msg)
     @show_blackjack_buttons = false
     @play_again = true
-    @success = msg
+    session[:player_pot] = session[:player_pot] + session[:player_bet]
+    @winner = msg
   end
 
   def loser!(msg)
     @show_blackjack_buttons = false
     @play_again = true
-    @error = msg
+    session[:player_pot] = session[:player_pot] - session[:player_bet]
+    @loser = msg
   end
 
   def tie!(msg)
     @show_blackjack_buttons = false
     @play_again = true
-    @success = msg
+    @winner = msg
   end
 
 end
@@ -86,6 +89,7 @@ post '/welcome' do
 end
 
 get '/set_name' do
+  session[:player_pot] = POT_AMOUNT
   erb :set_name
 end
 
@@ -95,7 +99,25 @@ post '/set_name' do
     halt erb(:set_name)
   end
   session[:player_name] = params[:player_name]
-  redirect '/game'
+  redirect '/bet'
+end
+
+get '/bet' do
+  session[:player_bet] = nil
+  erb :bet
+end
+
+post '/bet' do
+  if params[:bet_amount].nil? || params[:bet_amount].to_i == 0
+    @error = "Must make a bet."
+    halt erb(:bet)
+  elsif params[:bet_amount].to_i > session[:player_pot]
+    @error = "Bet cannot be greater than current amount. (#{session[:player_pot]})"
+    halt erb(:bet)
+  else
+    session[:player_bet] = params[:bet_amount].to_i
+    redirect '/game'
+  end
 end
 
 get '/game' do
@@ -126,7 +148,7 @@ post '/hit' do
   elsif player_total == BLACKJACK_AMOUNT
     winner!("#{session[:player_name]} hit Blackjack!!")
   end
-  erb :game
+  erb :game, layout: false
 end
 
 post '/stay' do
@@ -148,7 +170,7 @@ get '/game/dealer' do
     @show_dealer_hit = true
   end
 
-  erb :game
+  erb :game, layout: false
 end
 
 post '/game/dealer/hit' do
@@ -168,5 +190,5 @@ get '/game/compare' do
   else player_total == dealer_total
     tie!("Dealer: #{dealer_total}  Player: #{player_total} It's a tie!")
   end
-    erb :game
+    erb :game, layout: false
 end
