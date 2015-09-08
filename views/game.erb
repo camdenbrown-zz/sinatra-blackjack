@@ -1,9 +1,9 @@
 <div id="game">
   <%if @loser %>
-    <div class="alert alert-error"><%=@error%></div>
+    <div class="alert alert-error"><%=@loser%></div>
   <% end %>
   <%if @winner %>
-    <div class="alert alert-success"><%=@success%></div>
+    <div class="alert alert-success"><%=@winner%></div>
   <% end %>
 
   <h4> Hi, <%= session[:player_name]%>!</h4>
@@ -46,8 +46,8 @@
 
   Your total is: <%=calculate_total(session[:player_cards])%>
   <br/>
-  You have betted: <%=session[:player_bet]%>
-
+  You have betted: $<%=session[:player_bet]%>
+  <br/>
   What would you like to do?
   <br/>
   <%if @show_blackjack_buttons%>

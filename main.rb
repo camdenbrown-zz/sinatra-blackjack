@@ -163,7 +163,7 @@ get '/game/dealer' do
   if dealer_total == BLACKJACK_AMOUNT
     loser!("Dealer hit Blackjack!")
   elsif dealer_total > BLACKJACK_AMOUNT
-    loser!("Dealer busted. #{session[:player_name]} WINS!")
+    winner!("Dealer busted. #{session[:player_name]} WINS!")
   elsif dealer_total >= DEALER_MIN
     redirect '/game/compare'
   else

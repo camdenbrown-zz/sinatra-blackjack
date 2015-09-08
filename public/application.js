@@ -23,7 +23,7 @@ function player_stays() {
     alert("player stays!");
     $.ajax({
       type: "Post",
-      url: "/hit"
+      url: "/stay"
     }).done(function(msg) {
       $("#game").replaceWith(msg);
     });
