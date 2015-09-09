@@ -23,10 +23,11 @@ helpers do
       else
         total += value.to_i
       end
-      arr.select{|e| e =='A'}.count.times do
-        break if total <= BLACKJACK_AMOUNT
-        total -= 10
-      end
+    end
+
+    arr.select{|e| e =='A'}.count.times do
+      break if total <= BLACKJACK_AMOUNT
+      total -= 10
     end
 
       total
@@ -114,6 +115,9 @@ post '/bet' do
   elsif params[:bet_amount].to_i > session[:player_pot]
     @error = "Bet cannot be greater than current amount. (#{session[:player_pot]})"
     halt erb(:bet)
+  elsif params[:bet_amount].to_i < 0
+    @error = "Bet cannot be a negative number"
+    halt erb(:bet)
   else
     session[:player_bet] = params[:bet_amount].to_i
     redirect '/game'
@@ -187,7 +191,7 @@ get '/game/compare' do
     loser!("Sorry, #{session[:player_name]} you lost with a score of #{player_total}. Dealer had: #{dealer_total}")
   elsif player_total > dealer_total
     winner!("#{session[:player_name]} you WON with a score of #{player_total}. Dealer had: #{dealer_total}")
-  else player_total == dealer_total
+  else
     tie!("Dealer: #{dealer_total}  Player: #{player_total} It's a tie!")
   end
     erb :game, layout: false

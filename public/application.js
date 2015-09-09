@@ -4,7 +4,7 @@ $(document).ready(function(){
     dealer_hit();
   });
 
-function player_hits() {
+function playerHits() {
   $(document).on('click', "form#hit_form button", function() {
     alert("player hits!");
     $.ajax({
@@ -18,7 +18,7 @@ function player_hits() {
   });
 }
 
-function player_stays() {
+function playerStays() {
   $(document).on('click', "form#stay_form button", function() {
     alert("player stays!");
     $.ajax({
@@ -32,7 +32,7 @@ function player_stays() {
   });
 }
 
-function dealer_hit() {
+function dealerHits() {
   $(document).on('click', "form#dealer_hit button", function() {
     alert("Dealer hits!");
     $.ajax({
